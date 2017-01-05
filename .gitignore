@@ -13,3 +13,4 @@ profiles.clj
 \.#*
 .DS_Store
 /database/*-dev*sql
+/cfg
