@@ -13,7 +13,7 @@
   (keyboard/keytype "5") ;; insert coint
   (keyboard/keytype "1") ;; start game
   (Thread/sleep 1000)
-  (screen/screen-grab "mrdo.png") ;; capture a screen shot
+  (screen/score-grab "score.png") ;; capture the score
   (keyboard/hit-esc) ;; quit the game
   )
 

@@ -14,3 +14,10 @@
                                       (Rectangle. (.getScreenSize (Toolkit/getDefaultToolkit))))
         file (File. file-name)]
     (ImageIO/write capture img-type file)))
+
+(defn score-grab [file-name]
+  (let [img-type (second (re-find (re-matcher #"\.(\w+)$" file-name)))
+        capture (.createScreenCapture (Robot.)
+                                      (Rectangle. 895 81 228 31))
+        file (File. file-name)]
+    (ImageIO/write capture img-type file)))
