@@ -1,6 +1,6 @@
 (ns neural-net.keyboard
   (:import java.awt.Robot
-          java.awt.event.KeyEvent))
+           java.awt.event.KeyEvent))
 
 ;; from http://rosettacode.org/wiki/Simulate_input/Keyboard#Clojure
 ;; just a start, only does a-z,A-Z,0-9 does NOT handle special chars like ()
@@ -48,11 +48,13 @@
         (doto robot
           (.keyPress (. KeyEvent VK_SHIFT))
           (.keyPress (int ch))
+          (.delay 50)
           (.keyRelease (int ch))
           (.keyRelease (. KeyEvent VK_SHIFT)))
         (let [upCh (Character/toUpperCase ch)]
           (doto robot 
             (.keyPress (int upCh))
+            (.delay 50)
             (.keyRelease (int upCh))))))))
 
 ;; you can delay executio of the thread and type in another window:

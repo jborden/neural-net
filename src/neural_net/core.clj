@@ -1,6 +1,12 @@
-(ns neural-net.core)
+(ns neural-net.core
+  (:require [neural-net.mame :as mame]
+            [neural-net.keyboard :as keyboard]))
 
-(defn foo
-  "I don't do a whole lot."
-  [x]
-  (println x "Hello, World!"))
+(defn simulate
+  []
+  (future (mame/launch-rom "mrdo"))
+  (Thread/sleep 1500)
+  (keyboard/keytype "5")
+  (Thread/sleep 400)
+  (keyboard/keytype "1"))
+
