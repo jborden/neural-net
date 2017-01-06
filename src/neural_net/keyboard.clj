@@ -57,5 +57,14 @@
             (.delay 50)
             (.keyRelease (int upCh))))))))
 
+(defn hit-esc
+  "Hit the escape button"
+  []
+  (let [robot (new Robot)]
+    (doto robot
+      (.keyPress (. KeyEvent VK_ESCAPE))
+      (.delay 50)
+      (.keyRelease (. KeyEvent VK_ESCAPE)))))
+
 ;; you can delay executio of the thread and type in another window:
 ;; (do (Thread/sleep 3000) (keytype "1234567890"))
