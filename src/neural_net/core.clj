@@ -36,22 +36,21 @@
   (Thread/sleep 500) ;; the time it takes to start the games
   (keyboard/keytype! "5") ;; insert coint
   (keyboard/keytype! "1") ;; start game
+  (at-at/every 500 capture-score thread-pool)
   (Thread/sleep 1500)
   (keyboard/press-key! :left)
   (Thread/sleep 200)
   (keyboard/release-key! :left)
   (keyboard/press-key! :up)
-  (Thread/sleep 2000)
+  (Thread/sleep 1600)
   (keyboard/release-key! :up)
-  (keyboard/press-key! :up)
   (keyboard/press-key! :left)
   (Thread/sleep 2000)
-  (keyboard/release-key! :up)
   (keyboard/release-key! :left)
   (keyboard/hit-key! :right)
   (keyboard/hit-key! :ctrl)
   (Thread/sleep 2000)
   (keyboard/hit-key! :esc) ;; quit the game
-  ;;(at-at/every 500 capture-score thread-pool)
+  (at-at/stop-and-reset-pool! thread-pool)
   )
 
