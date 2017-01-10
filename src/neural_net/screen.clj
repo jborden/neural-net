@@ -1,23 +1,31 @@
 (ns neural-net.screen
-  (:import (java.awt Robot Rectangle Toolkit)
-           (java.awt.image BufferedImage)
-           (java.io File IOException)
-           (javax.imageio ImageIO)))
+  (:import [java.awt Robot Rectangle])
+  (:require [mikera.image.core :refer [save]]
+            [mikera.image.filters :refer [grayscale]]))
 
 ;; see http://www.mailsend-online.com/blog/screen-captures-with-java-and-clojure.html
 ;; for a pure java implementation
 
 ;; from http://gettingclojure.wikidot.com/cookbook:system
-(defn screen-grab [file-name]
-  (let [img-type (second (re-find (re-matcher #"\.(\w+)$" file-name)))
+(defn screen-grab []
+  (let [;;img-type (second (re-find (re-matcher #"\.(\w+)$" file-name)))
         capture (.createScreenCapture (Robot.)
-                                      (Rectangle. (.getScreenSize (Toolkit/getDefaultToolkit))))
-        file (File. file-name)]
-    (ImageIO/write capture img-type file)))
+                                      (Rectangle. (.getScreenSize (Toolkit/getDefaultToolkit))))]
+    capture))
 
-(defn score-grab [file-name]
-  (let [img-type (second (re-find (re-matcher #"\.(\w+)$" file-name)))
+(defn score-grab []
+  (let [;;img-type (second (re-find (re-matcher #"\.(\w+)$" file-name)))
         capture (.createScreenCapture (Robot.)
-                                      (Rectangle. 895 81 228 31))
-        file (File. file-name)]
-    (ImageIO/write capture img-type file)))
+                                      (Rectangle. 895 81 228 31))]
+    capture))
+
+(defn game-grab []
+  (let [;;img-type (second (re-find (re-matcher #"\.(\w+)$" file-name)))
+        capture (.createScreenCapture (Robot.)
+                                      (Rectangle. 1192 244 178 238))]
+    capture))
+
+(defn save-grayscale
+  [image file-name]
+  (save ((grayscale) image)
+        file-name))

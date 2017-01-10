@@ -14,4 +14,6 @@
 (defn launch-rom
   "Given a str rom, launch rom"
   [rom]
-  (sh mame-exe "-rompath" rom-path "-w" rom))
+  (sh mame-exe "-rompath" rom-path "-resolution" "192x240" "-w" rom)
+  ;;(sh mame-exe "-rompath" rom-path "-w" rom)
+  )
