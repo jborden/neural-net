@@ -36,7 +36,9 @@
     bi))
 
 ;; note: this takes about 6 seconds to load, so is commented out
-;;(def mat-file (read-mat-file "/Users/james/Documents/Online_Courses/ML_Class/mlclass-ex3/ex3data1txt.mat"))
+;;(def mat-file (read-mat-file "resources/data/ex3data1_txt.mat"))
+;;(def Theta1 (read-mat-file "resources/data/Theta1_txt.mat"))
+;;(def Theta2 (read-mat-file "resources/data/Theta2_txt.mat"))
 
 (defn show-nth-numeral
   "Assuming that mat-file is already defined above, show the nth letter"
