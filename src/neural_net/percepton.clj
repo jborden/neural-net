@@ -9,7 +9,9 @@
 ;; (slice mat n) is equivalent to (nth vec-of-vecs n)
 ;; (vec mat) converts the matrix to a clojure vector
 ;; (m/shape matrix) - return the shape of the data
-;; (m/shape (m/array (mapv vector (m/slice X 0)))) - convert vector to array of columns
+;; (m/array (mapv vector the-vector)) - convert vector to column matrix
+;; alternative
+;; (m/reshape the-vector [(m/row-count the-vector) 1])
 ;;
 ;; note: octave starts index at 1 (it's sane)
 ;;       core.matrix starts index at 0
@@ -26,6 +28,36 @@
 ;; [max_values, max_value_indices] = max(Z)
 ;; max_values = (mapv m/emax (m/columns Z))
 ;; max_value_indices = (mapv #(.indexOf (vec %) (m/emax %)) (m/columns Z))
+;; [ones(20,1) (exp(1) * sin(1:1:20))' (exp(0.5) * cos(1:1:20))'] =
+;; (m/join-along 1 (m/add (m/zero-matrix 20 1) 1)
+;; note: You can not tranpose a vector to an array in core.matrix, unfortunately
+;;                 (m/array (mapv vector (m/array (map #(* (Math/exp 1) (Math/sin %)) (range 1 21)))))
+;;                 (m/array (mapv vector (m/array (map #(* (Math/exp 0.5) (Math/cos %)) (range 1 21))))))
+;; alternatively
+;; (m/join-along 1 (m/add (m/zero-matrix 20 1) 1)
+;;               (m/reshape (m/array (map #(* (Math/exp 1) (Math/sin %)) (range 1 21))) [20 1])
+;;               (m/reshape (m/array (map #(* (Math/exp 0.5) (Math/cos %)) (range 1 21))) [20 1]))
+
+;; note: X = [ones(20,1) (exp(1) * sin(1:1:20))' (exp(0.5) * cos(1:1:20))']
+;; sin(X(:,1) + X(:,2)) > 0; =
+;; (m/gt (m/reshape (m/emap #(Math/sin %) (op/+ (m/slice X 1 0) (m/slice X 1 1))) [(m/row-count (m/slice X 1 0)) 1]) 0)
+;; where
+;; X(:,1) = (m/slice X 1 0)
+;; X(:,2) = (m/slice X 1 1)
+
+;; below would be a MUCH nicer syntax
+;; (> (sin (+ (X : 1) (X : 2)) 0))
+;; : = row-count in 1st position
+;;   = column-count in 2nd position
+;;
+;; (m/array (map #(Math/sin %) (range 1 21))
+
+;; what? vectors have a row-count but not a column count? seems like bad aesthetics
+;; (m/column-count the-vector) =>
+;; RuntimeException Vector does not have dimension: 1  mikera.vectorz.matrix-api/eval20433/fn--20442 (matrix_api.clj:506)
+;;
+;; (m/row-count the-vector) => 20
+
 (defn sigmoid [z]
   (/ 1 (+ 1 (Math/exp (* -1 z)))))
 
@@ -60,10 +92,10 @@
     bi))
 
 ;; note: X takes about 6 seconds to load
-(defonce X (m/array
-            (read-mat-file "resources/data/ex3data1_txt.mat")))
-(defonce Theta1 (m/array (read-mat-file "resources/data/Theta1_txt.mat")))
-(defonce Theta2 (m/array (read-mat-file "resources/data/Theta2_txt.mat")))
+;; (defonce X (m/array
+;;             (read-mat-file "resources/data/ex3data1_txt.mat")))
+;; (defonce Theta1 (m/array (read-mat-file "resources/data/Theta1_txt.mat")))
+;; (defonce Theta2 (m/array (read-mat-file "resources/data/Theta2_txt.mat")))
 
 (defn show-nth-numeral
   "Show the nth numeral in numeral-mat"
@@ -89,3 +121,13 @@
   [number-mat n]
   (mod (+ (first (predict Theta1 Theta2 (m/array [(m/slice number-mat n)]))) 1)
        10))
+
+(def X
+  (m/join-along 1 (m/add (m/zero-matrix 20 1) 1)
+                (m/reshape (m/array (map #(* (Math/exp 1) (Math/sin %))
+                                         (range 1 21))) [20 1])
+                (m/reshape (m/array (map #(* (Math/exp 0.5) (Math/cos %))
+                                         (range 1 21))) [20 1])))
+(def y
+  (m/gt (m/reshape (m/emap #(Math/sin %) (op/+ (m/slice X 1 0) (m/slice X 1 1)))
+                   [(m/row-count (m/slice X 1 0)) 1]) 0))
