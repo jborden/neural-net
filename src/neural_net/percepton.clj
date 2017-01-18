@@ -187,3 +187,46 @@
         ]
     {:J J
      :grad grad}))
+
+(def Xm
+  ;; matlab
+  ;;
+  ;; [ -1 -1 ; -1 -2 ; -2 -1 ; -2 -2 ; ...
+  ;;   1 1 ;  1 2 ;  2 1 ; 2 2 ; ...
+  ;;   -1 1 ;  -1 2 ;  -2 1 ; -2 2 ; ...
+  ;;   1 -1 ; 1 -2 ;  -2 -1 ; -2 -2 ];
+  (m/array [[-1 -1] [-1 -2] [-2 -1] [-2 -2]
+            [1 1] [1 2] [2 1] [2 2]
+            [-1 1] [-1 2] [-2 1] [-2 2]
+            [1 -1] [1 -2] [-2 -1] [-2 -2]]))
+
+(def ym
+  ;; matlab
+  ;; [ 1 1 1 1 2 2 2 2 3 3 3 3 4 4 4 4 ]';
+  (m/transpose (m/array [[1 1 1 1 2 2 2 2 3 3 3 3 4 4 4 4]])))
+
+(def t1
+  ;; matlab
+  ;; sin(reshape(1:2:24, 4, 3));
+  (m/emap #(Math/sin %)
+          ;; reshape(1:2:24, 4, 3) in matlab
+          ;; np.transpose(np.reshape(list(range(1,24,2)),[3,4])) in python
+          ;; see:https://groups.google.com/forum/#!msg/numerical-clojure/zebBCa68eTw/lMv-GTfXwikJ
+          ;; for some discussion related to this issue
+          (m/transpose (m/reshape (m/array [(range 1 24 2)]) [3 4]))))
+(def t2
+  ;; matlab
+  ;; cos(reshape(1:2:40, 4, 5));
+  (m/emap #(Math/cos %)
+          (m/transpose (m/reshape (m/array [(range 1 40 2)]) [5 4]))))
+
+(defn one-vs-all
+  [X y num-labels lambda]
+  (let [m (m/row-count X)
+        n (m/column-count X)
+        all-theta (m/zero-matrix num-labels (+ n 1))
+        X (m/join-along 1 (m/add (m/zero-matrix m 1) 1) X)
+        initial-theta (m/zero-matrix (+ n 1) 1)
+        ]
+    initial-theta
+    ))
