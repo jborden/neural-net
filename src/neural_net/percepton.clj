@@ -130,11 +130,11 @@
         max-value-indices (mapv #(.indexOf (vec %) (m/emax %)) (m/columns a3))]
     (m/transpose max-value-indices)))
 
-(defn predict-nth-numeral
-  "Predict what the nth numeral in number-mat should be"
-  [number-mat n]
-  (mod (+ (first (predict Theta1 Theta2 (m/array [(m/slice number-mat n)]))) 1)
-       10))
+;; (defn predict-nth-numeral
+;;   "Predict what the nth numeral in number-mat should be"
+;;   [number-mat n]
+;;   (mod (+ (first (predict Theta1 Theta2 (m/array [(m/slice number-mat n)]))) 1)
+;;        10))
 
 (def X
   (m/join-along 1 (m/add (m/zero-matrix 20 1) 1)
